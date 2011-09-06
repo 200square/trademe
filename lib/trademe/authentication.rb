@@ -2,10 +2,9 @@ module Trademe
   module Authentication
     
     attr_accessor :consumer, :request_token, :access_token
-
+    
     # authorize_url EG: "https://secure.trademe.co.nz/Oauth/Authorize?oauth_token=50277019F3C05999C6599D6801C4607F73"
-    def generate_request_token(callback, key, secret)
-      generate_consumer(key, secret)
+    def generate_request_token(callback = "oob")
       @request_token = @consumer.get_request_token :oauth_callback => callback
       @request_token.authorize_url
     end
@@ -20,6 +19,10 @@ module Trademe
     def get_access_token(verifier)
       @access_token = request_token.get_access_token(:oauth_verifier => verifier)
       authorized?
+    end
+    
+    def authorize_from_access(atoken, asecret)
+      @access_token = OAuth::AccessToken.new(atoken, asecret)
     end
 
     def authorized?
