@@ -10,6 +10,7 @@ GEM
   specs:
     mocha (0.9.12)
     oauth (0.4.4)
+    rake (0.8.7)
     shoulda (2.11.3)
     test-unit (2.2.0)
     yajl-ruby (0.8.1)
@@ -19,6 +20,7 @@ PLATFORMS
 
 DEPENDENCIES
   mocha
+  rake (= 0.8.7)
   shoulda
   test-unit
   trademe!
