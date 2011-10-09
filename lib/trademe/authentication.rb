@@ -9,11 +9,6 @@ module Trademe
       @request_token.authorize_url
     end
     
-    def generate_access_token(consumer_key, consumer_secret, access_key, access_secret)
-      generate_consumer(consumer_key, consumer_secret)
-      @access_token = OAuth::AccessToken.new(@consumer, access_key, access_secret)
-    end
-
     # example callback: "http://example.com/?oauth_token=0721023CAA76ECF37F4C314DA8A87C38BC&oauth_verifier=F5F194F52CCACC1B9A9F0CE6CB4163E0AB"
     # use oauth_verifier param from URL
     def get_access_token(verifier)
@@ -22,20 +17,12 @@ module Trademe
     end
     
     def authorize_from_access(atoken, asecret)
-      @access_token = OAuth::AccessToken.new(atoken, asecret)
+      @access_token = OAuth::AccessToken.new(@consumer, atoken, asecret)
     end
 
     def authorized?
       !!consumer && !!access_token
     end
     
-    def generate_consumer(key, secret)
-      @consumer = OAuth::Consumer.new(key, secret, { 
-        :site               => "https://secure.trademe.co.nz",
-        :request_token_path => "/Oauth/RequestToken",
-        :access_token_path  => "/Oauth/AccessToken",
-        :authorize_path     => "/Oauth/Authorize"
-      })
-    end
   end
 end
