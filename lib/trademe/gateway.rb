@@ -15,7 +15,7 @@ module Trademe
     
       if (consumer_key = opts.delete(:consumer_key)) && (consumer_secret = opts.delete(:consumer_secret))
         @consumer = OAuth::Consumer.new(consumer_key, consumer_secret, { 
-          :site               => DOMAIN + "/" + VERSION,
+          :site               => "https://#{DOMAIN}/#{VERSION}",
           :request_token_url  => "https://secure.trademe.co.nz/Oauth/RequestToken",
           :access_token_url   => "https://secure.trademe.co.nz/Oauth/AccessToken",
           :authorize_url      => "https://secure.trademe.co.nz/Oauth/Authorize",
