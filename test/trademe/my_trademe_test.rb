@@ -46,8 +46,9 @@ class MyTrademeTest < Test::Unit::TestCase
           setup do
             success_response = Net::HTTPSuccess.new('foo', 200, 'Success')
             success_response.stubs(:body).returns("[]") # TODO: need to use the API to grab some test json and throw it in a mock.
-            @gateway.consumer.expects(:request).at_least_once.returns(success_response)
-            
+
+            @gateway.access_token = mock(:get => success_response)
+           
             @response = if criteria
               @gateway.send(method, criteria)
             else

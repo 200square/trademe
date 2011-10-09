@@ -15,10 +15,11 @@ module Trademe
     
       if (consumer_key = opts.delete(:consumer_key)) && (consumer_secret = opts.delete(:consumer_secret))
         @consumer = OAuth::Consumer.new(consumer_key, consumer_secret, { 
-          :site               => "https://secure.trademe.co.nz",
-          :request_token_path => "/Oauth/RequestToken",
-          :access_token_path  => "/Oauth/AccessToken",
-          :authorize_path     => "/Oauth/Authorize"
+          :site               => DOMAIN + "/" + VERSION,
+          :request_token_url  => "https://secure.trademe.co.nz/Oauth/RequestToken",
+          :access_token_url   => "https://secure.trademe.co.nz/Oauth/AccessToken",
+          :authorize_url      => "https://secure.trademe.co.nz/Oauth/Authorize",
+          :scheme             => :query_string
         })
       end
     end
@@ -57,7 +58,8 @@ module Trademe
           uri = URI.parse("#{protocol}://#{@domain}")
           Net::HTTP.get uri.host, path
         else
-          res = consumer.request(:get, ("#{protocol}://#{@domain}" + path), access_token, { :scheme => :query_string })
+          #res = consumer.request(:get, ("#{protocol}://#{@domain}" + path), access_token, { :scheme => :query_string })
+          res = self.access_token.get(path)
           res.body
         end
                 
