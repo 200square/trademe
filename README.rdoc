@@ -1,47 +1,37 @@
-= Ruby wrapper for the Trademe API
+= Ruby Wrapper for the Trademe API
 
-API available at: {http://developer.trademe.co.nz}[http://developer.trademe.co.nz]  
+API documentation available at: {http://developer.trademe.co.nz}[http://developer.trademe.co.nz]
 
-== Sample usage:
+== Sample Usage
 
-  gateway = Trademe::Gateway.new
-  authorize_url = gateway.generate_request_token(callback, key, secret)
+gateway.search "property/residential", :search_string => "flash apartment", :date_from => 4.hours.ago
+
+This will return the parsed JSON response
+
+== Authentication via OAuth:
+
+  gateway                 = Trademe::Gateway.new(consumer_key, consumer_secret)
+  authorize_url           = gateway.generate_request_token(callback_url)
   session[:request_token] = gateway.request_token
   redirect_to authorize_url
 
 Upon return to callback url (with params[:oauth_verifier] set):
 
-  gateway = Trademe::Gateway.new
+  gateway               = Trademe::Gateway.new
   gateway.request_token = session[:request_token]
   if gateway.get_access_token(params[:oauth_verifier])
     session[:access_token] = gateway.access_token
   end
-  
-You are now verified! 
 
-Currently the OAuth system has been implemented so that searches are counted against the "Authenticated rate limit" as per the Trademe website.
-You can perform searches via the gateway if you have been authorized or not, but non authorized searches are limited to 60 requests per hour!
+You are now verified!
 
-Perform API searches via:
-
-  gateway.search "property/residential", :search_string => "flash apartment", :date_from => 4.hours.ago
-
-This will return the parsed JSON response
-
-
-== To come:
-
-Planning to add these at some point:
-* Total API coverage
-* Requests for private data that needs authentication
-* Write requests
+Authentication allows you a rate limit of 1000 requests per hour (see http://developer.trademe.co.nz/api-overview/rate-limiting/ for more information)
 
 == Contributions
 
-Feel free to get in touch! It is very early days as the Trademe API was release a week ago.
 If you want to push a patch, please fork the project, commit the patch to the fork and submit a pull request.
 
-For anything else, send me a me a message via Github {http://github.com/clarketus}[http://github.com/clarketus]
+Original code by {http://github.com/clarketus}[http://github.com/clarketus].
 
 == License
 
