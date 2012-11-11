@@ -9,7 +9,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     mocha (0.9.12)
-    oauth (0.4.4)
+    oauth (0.4.7)
     rake (0.8.7)
     shoulda (2.11.3)
     test-unit (2.2.0)
