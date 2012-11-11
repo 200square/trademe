@@ -6,7 +6,7 @@ API documentation available at: {http://developer.trademe.co.nz}[http://develope
 
   gem "trademe"
 
-In your Gemfile.lock should do the trick.
+In your Gemfile should do the trick.
 
 Note that there is currently an issue with the Ruby OAuth library that may cause you to get 404 responses
 from token requests. You can fix that by adding the following to your Gemfile:
