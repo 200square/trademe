@@ -27,6 +27,20 @@ You are now verified!
 
 Authentication allows you a rate limit of 1000 requests per hour (see http://developer.trademe.co.nz/api-overview/rate-limiting/ for more information)
 
+== Logging
+
+You can specify a logger using:
+
+  gateway.logger = Trademe::Loggers::FileLogger.new(log_filename)
+
+The bundled loggers are a FileLogger, RedisCountLogger and MultipleLogger.
+
+FileLogger is a thin wrapper over Ruby's Logger class.
+
+RedisCountLogger is useful for rate limiting, it increments a Redis key for each call you make within an hour.
+
+MultipleLogger allows you to use multiple loggers at once.
+
 == Contributions
 
 If you want to push a patch, please fork the project, commit the patch to the fork and submit a pull request.
