@@ -2,6 +2,19 @@
 
 API documentation available at: {http://developer.trademe.co.nz}[http://developer.trademe.co.nz]
 
+== Installation
+
+  gem "trademe"
+
+In your Gemfile should do the trick.
+
+Note that there is currently an issue with the Ruby OAuth library that may cause you to get 404 responses
+from token requests. You can fix that by adding the following to your Gemfile:
+
+  gem "oauth", :git => "git://github.com/nikz/oauth-ruby.git"
+
+You can disable this when/if https://github.com/oauth/oauth-ruby/pull/65 gets applied.
+
 == Sample Usage
 
 gateway.search "property/residential", :search_string => "flash apartment", :date_from => 4.hours.ago
