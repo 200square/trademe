@@ -9,6 +9,7 @@ module Trademe
   VERSION = "0.2.1"
 end
 
-require "trademe/authentication"
-require "trademe/my_trademe"
+require "trademe/gateway/authentication"
+require "trademe/gateway/my_trademe"
 require "trademe/gateway"
+require "trademe/loggers"
