@@ -21,14 +21,15 @@ module Trademe
       self.logger = opts.delete(:logger)
       if Rails.env.production?
         if (consumer_key = opts.delete(:consumer_key)) && (consumer_secret = opts.delete(:consumer_secret))
-          @consumer = OAuth::Consumer.new(consumer_key, consumer_secret, {
-          :site               => "https://#{DOMAIN}/#{VERSION}",
-          :request_token_url  => "https://secure.trademe.co.nz/Oauth/RequestToken",
-          :access_token_url   => "https://secure.trademe.co.nz/Oauth/AccessToken",
-          :authorize_url      => "https://secure.trademe.co.nz/Oauth/Authorize",
-          :scheme             => :query_string,
-          :signature_method => "PLAINTEXT"
-        })
+            @consumer = OAuth::Consumer.new(consumer_key, consumer_secret, {
+            :site               => "https://#{DOMAIN}/#{VERSION}",
+            :request_token_url  => "https://secure.trademe.co.nz/Oauth/RequestToken",
+            :access_token_url   => "https://secure.trademe.co.nz/Oauth/AccessToken",
+            :authorize_url      => "https://secure.trademe.co.nz/Oauth/Authorize",
+            :scheme             => :query_string,
+            :signature_method => "PLAINTEXT"
+          })
+        end
        else
         if (consumer_key = opts.delete(:consumer_key)) && (consumer_secret = opts.delete(:consumer_secret))
           @consumer = OAuth::Consumer.new(consumer_key, consumer_secret, {
