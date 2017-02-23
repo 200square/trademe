@@ -1,7 +1,10 @@
 module Trademe
   class Gateway
-
-    DOMAIN = "api.trademe.co.nz"
+    if Rails.env.production?
+      DOMAIN = "api.trademe.co.nz"
+    else
+      DOMAIN = "api.tmsandbox.co.nz"
+    end
     VERSION = "v1"
     FORMAT = "json"
 
@@ -16,15 +19,27 @@ module Trademe
       @format = FORMAT # format must be json
 
       self.logger = opts.delete(:logger)
-
-      if (consumer_key = opts.delete(:consumer_key)) && (consumer_secret = opts.delete(:consumer_secret))
-        @consumer = OAuth::Consumer.new(consumer_key, consumer_secret, {
+      if Rails.env.production?
+        if (consumer_key = opts.delete(:consumer_key)) && (consumer_secret = opts.delete(:consumer_secret))
+          @consumer = OAuth::Consumer.new(consumer_key, consumer_secret, {
           :site               => "https://#{DOMAIN}/#{VERSION}",
           :request_token_url  => "https://secure.trademe.co.nz/Oauth/RequestToken",
           :access_token_url   => "https://secure.trademe.co.nz/Oauth/AccessToken",
           :authorize_url      => "https://secure.trademe.co.nz/Oauth/Authorize",
-          :scheme             => :query_string
+          :scheme             => :query_string,
+          :signature_method => "PLAINTEXT"
         })
+       else
+        if (consumer_key = opts.delete(:consumer_key)) && (consumer_secret = opts.delete(:consumer_secret))
+          @consumer = OAuth::Consumer.new(consumer_key, consumer_secret, {
+            :site               => "https://#{DOMAIN}/#{VERSION}",
+            :request_token_url  => "https://secure.tmsandbox.co.nz/Oauth/RequestToken",
+            :access_token_url   => "https://secure.tmsandbox.co.nz/Oauth/AccessToken",
+            :authorize_url      => "https://secure.tmsandbox.co.nz/Oauth/Authorize",
+            :scheme             => :query_string,
+            :signature_method => "PLAINTEXT"
+          })
+       end 
       end
     end
 
@@ -37,9 +52,22 @@ module Trademe
       send_request(url)
     end
 
-    def get_listing(listing_id)
-      url = "#{base_url}/Listings/#{listing_id}.#{@format}"
+    def open_homes(term, filters = {})
+      term = term.split("/").map{|t| t.capitalize }.join("/")
 
+      url = "#{base_url}/Search/Property/OpenHomes.#{@format}"
+      url << "?#{urlize(filters)}" unless filters.empty?
+
+      send_request(url)
+    end
+
+    def get_listing(listing_id)
+      url = "#{base_url}/Selling/Listings/#{listing_id}.#{@format}"
+      send_request(url)
+    end
+
+    def post_listing(listing_id)
+      url = "#{base_url}/Listings/#{listing_id}.#{@format}"
       send_request(url)
     end
 
@@ -62,8 +90,25 @@ module Trademe
           uri = URI.parse("#{protocol}://#{@domain}")
           Net::HTTP.get uri.host, path
         else
-          #res = consumer.request(:get, ("#{protocol}://#{@domain}" + path), access_token, { :scheme => :query_string })
           res = self.access_token.get(path)
+          res.body
+        end
+
+        logger.log_api_call(path, response) if self.logger
+
+        json = ::Yajl::Parser.new.parse(response)
+        raise ApiError.new "#{json["ErrorDescription"]}" if !json.is_a?(Array) && json["ErrorDescription"]
+        json
+      rescue ::Yajl::ParseError => e
+        raise ApiError.new "Bad JSON response #{response.inspect}"
+      end
+
+      def post_request(path, params)
+        response = if !authorized?
+          uri = URI.parse("#{protocol}://#{@domain}")
+          Net::HTTP.post uri.host, path, params
+        else
+          res = self.access_token.post(path)
           res.body
         end
 
