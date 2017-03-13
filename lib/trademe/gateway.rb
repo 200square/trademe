@@ -62,10 +62,10 @@ module Trademe
       send_request(url)
     end
 
-    def get_listing(listing_id)
-      url = "#{base_url}/Selling/Listings/#{listing_id}.#{@format}"
+   def get_listing(listing_id)
+      url = "#{base_url}/Listings/#{listing_id}.#{@format}"
       send_request(url)
-    end
+   end
 
     def post_listing(listing_id)
       url = "#{base_url}/Listings/#{listing_id}.#{@format}"
