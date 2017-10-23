@@ -26,7 +26,7 @@ module Trademe
             :request_token_url  => "https://secure.trademe.co.nz/Oauth/RequestToken",
             :access_token_url   => "https://secure.trademe.co.nz/Oauth/AccessToken",
             :authorize_url      => "https://secure.trademe.co.nz/Oauth/Authorize",
-            :scheme             => :query_string,
+            :scheme             => :header,
             :signature_method => "PLAINTEXT"
           })
         end
@@ -37,7 +37,7 @@ module Trademe
             :request_token_url  => "https://secure.tmsandbox.co.nz/Oauth/RequestToken",
             :access_token_url   => "https://secure.tmsandbox.co.nz/Oauth/AccessToken",
             :authorize_url      => "https://secure.tmsandbox.co.nz/Oauth/Authorize",
-            :scheme             => :query_string,
+            :scheme             => :header,
             :signature_method => "PLAINTEXT"
           })
        end 
